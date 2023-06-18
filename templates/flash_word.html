@@ -10,7 +10,7 @@
     <div class="container">
         <h1 class="mt-4">Flash Word System</h1>
         
-        {% for flash_word in flash_words %}
+        {% if show_full_word %}
             <div class="card mt-4">
                 <div class="card-body">
                     <h5 class="card-title">{{ flash_word.word }}</h5>
@@ -19,7 +19,22 @@
                     <p class="card-text"><strong>Kanji:</strong> {{ flash_word.kanji }}</p>
                 </div>
             </div>
-        {% endfor %}
+            <form method="post">
+                {% csrf_token %}
+                <button class="btn btn-primary mt-4" type="submit" name="next">Next</button>
+                <a class="btn btn-secondary mt-4" href="/">Finish</a>
+            </form>
+        {% else %}
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ flash_word.word }}</h5>
+                </div>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <button class="btn btn-primary mt-4" type="submit" name="show_full">Show Full Word</button>
+            </form>
+        {% endif %}
     </div>
 
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
