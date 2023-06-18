@@ -1,0 +1,27 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <title>Flash Word System</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Flash Word System</h1>
+        
+        {% for flash_word in flash_words %}
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ flash_word.word }}</h5>
+                    <p class="card-text"><strong>Meaning:</strong> {{ flash_word.meaning }}</p>
+                    <p class="card-text"><strong>Example:</strong> {{ flash_word.example }}</p>
+                    <p class="card-text"><strong>Kanji:</strong> {{ flash_word.kanji }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+</html>
