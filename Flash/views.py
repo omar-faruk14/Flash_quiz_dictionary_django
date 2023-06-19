@@ -1,29 +1,15 @@
 from django.shortcuts import render, HttpResponse
 from .models import FlashWord
+import random
 
-from django.shortcuts import render
-from .models import FlashWord
+def flashcard_view(request):
+    # Get a random word from the database
+    random_word = FlashWord.objects.order_by('?').first()
 
-def flash_word(request):
-    if request.method == 'GET':
-        flash_words = FlashWord.objects.order_by('?')[:1]  # Retrieve 1 random flash word
-
-        context = {
-            'flash_word': flash_words[0],
-            'show_full_word': False,
-        }
-
-        return render(request, 'flash_word.html', context)
-
-    elif request.method == 'POST':
-        flash_words = FlashWord.objects.order_by('?')[:1]  # Retrieve 1 random flash word
-
-        context = {
-            'flash_word': flash_words[0],
-            'show_full_word': True,
-        }
-
-        return render(request, 'flash_word.html', context)
+    context = {
+        'word': random_word
+    }
+    return render(request, 'flashcards.html', context)
 
 
 def home(request):

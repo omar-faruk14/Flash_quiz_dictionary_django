@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     #path('admin/', admin.site.urls),
     path('',Flash_View.home,name="Home"),
-    path('flash-word/', Flash_View.flash_word, name='flash_word'),
+    path('flash-word/', Flash_View.flashcard_view, name='flash_word'),
 ]
 
 if settings.DEBUG:

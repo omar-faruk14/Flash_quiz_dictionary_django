@@ -9,31 +9,37 @@
 <body>
     <div class="container">
         <h1 class="mt-4">Flash Word System</h1>
-        
-        {% if show_full_word %}
-            <div class="card mt-4">
-                <div class="card-body">
-                    <h5 class="card-title">{{ flash_word.word }}</h5>
-                    <p class="card-text"><strong>Meaning:</strong> {{ flash_word.meaning }}</p>
-                    <p class="card-text"><strong>Example:</strong> {{ flash_word.example }}</p>
-                    <p class="card-text"><strong>Kanji:</strong> {{ flash_word.kanji }}</p>
+
+        <div class="row">
+            {% for flash_word in flash_words %}
+            <div class="col-sm-6 col-md-4 col-lg-3 mt-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ flash_word.word }}</h5>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="flash_word_id" value="{{ flash_word.id }}">
+                            <button class="btn btn-primary show-info-btn" type="submit" name="show_info">Show Info</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-            <form method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary mt-4" type="submit" name="next">Next</button>
-                <a class="btn btn-secondary mt-4" href="/">Finish</a>
-            </form>
-        {% else %}
-            <div class="card mt-4">
-                <div class="card-body">
-                    <h5 class="card-title">{{ flash_word.word }}</h5>
-                </div>
+            {% endfor %}
+        </div>
+
+        {% if flash_word %}
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">{{ flash_word.word }}</h5>
+                <p class="card-text">{{ flash_word.meaning }}</p>
+                <p class="card-text">{{ flash_word.example }}</p>
+                <p class="card-text">{{ flash_word.kanji }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-primary mt-2" type="submit" name="next">Next</button>
+                </form>
             </div>
-            <form method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary mt-4" type="submit" name="show_full">Show Full Word</button>
-            </form>
+        </div>
         {% endif %}
     </div>
 
