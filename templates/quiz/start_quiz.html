@@ -1,0 +1,24 @@
+<!-- start_quiz.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Start Quiz</title>
+</head>
+<body>
+    <h1>Available Quizzes</h1>
+    <ul>
+        {% for quiz in quizzes %}
+            <li>
+                <form method="POST" action="{% url 'start_quiz' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="quiz_id" value="{{ quiz.id }}">
+                    <h3>{{ quiz.title }}</h3>
+                    <button type="submit">Start Quiz</button>
+                </form>
+            </li>
+        {% empty %}
+            <p>No quizzes available.</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>
