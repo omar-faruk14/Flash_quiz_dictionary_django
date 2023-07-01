@@ -8,11 +8,13 @@ urlpatterns = [
     #path('admin/', admin.site.urls),
     path('',Flash_View.home,name="Home"),
     path('flash-word/', Flash_View.flashcard_view, name='flash_word'),
-    path('quiz/',Quiz_View.create_quiz,name='quiz'),
-    path('create-quiz',Quiz_View.create_quiz_with_option,name='create-quiz'),
+    path('quiz/',Quiz_View.create_quiz,name='quiz'), #Create All
+    path('create-quiz',Quiz_View.create_quiz_with_option,name='create-quiz'), #Create Quiz with automatic title
     path('quiz/start/', Quiz_View.start_quiz, name='start_quiz'),
-    path('quiz/question/<int:question_id>/', Quiz_View.question_page, name='question_page'),
-    path('quiz/result/', Quiz_View.quiz_result, name='quiz_result'),
+    path('quiz/<int:quiz_id>/', Quiz_View.quiz_page, name='quiz_page'),
+    path('submit_quiz/',Quiz_View.submit_quiz,name="submit_quiz"),
+    path('result/<int:score>/<int:total_questions>/', Quiz_View.result_page, name='result_page'),
+
 
 ]
 

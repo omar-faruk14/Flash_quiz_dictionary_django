@@ -9,12 +9,7 @@
     <ul>
         {% for quiz in quizzes %}
             <li>
-                <form method="POST" action="{% url 'start_quiz' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="quiz_id" value="{{ quiz.id }}">
-                    <h3>{{ quiz.title }}</h3>
-                    <button type="submit">Start Quiz</button>
-                </form>
+                <a href="{% url 'quiz_page' quiz.id %}">{{ quiz.title }}</a>
             </li>
         {% empty %}
             <p>No quizzes available.</p>

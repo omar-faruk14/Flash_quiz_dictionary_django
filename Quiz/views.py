@@ -1,5 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from .models import Quiz, Question, Choice
+from django.views.decorators.http import require_POST
+from django.contrib import messages
+
 
 def create_quiz(request):
     if request.method == 'POST':
@@ -45,42 +48,49 @@ def create_quiz_with_option(request):
         quizzes = Quiz.objects.all()
         return render(request, 'quiz/create_quiz_option.html', {'quizzes': quizzes})
 
+
+
+
 def start_quiz(request):
-    if request.method == 'POST':
-        # Assuming you have a form to start the quiz
-        quiz_id = request.POST.get('quiz_id')
-        # Retrieve the first question
-        first_question = Question.objects.filter(quiz_id=quiz_id).first()
-        if first_question:
-            return redirect('question_page', question_id=first_question.id)
-        else:
-            # Handle the case where no questions are found for the quiz
-            pass
-    else:
-        quizzes = Quiz.objects.all()
-        return render(request, 'quiz/start_quiz.html', {'quizzes': quizzes})
+    quizzes = Quiz.objects.all()
+    context = {
+        'quizzes': quizzes
+    }
+    return render(request, 'quiz/start_quiz.html', context)
 
-def question_page(request, question_id):
-    question = Question.objects.get(id=question_id)
-    choices = Choice.objects.filter(question=question)
+def quiz_page(request, quiz_id):
+    quiz = Quiz.objects.get(id=quiz_id)
+    questions = quiz.question_set.all()
+    context = {
+        'quiz': quiz,
+        'questions': questions
+    }
+    return render(request, 'quiz/quiz_page.html', context)
 
-    if request.method == 'POST':
-        selected_choice_id = request.POST.get('choice')
-        selected_choice = Choice.objects.get(id=selected_choice_id)
-        # Perform any necessary calculations or checks for correctness
-        # Store the user's response or perform any required actions
+@require_POST
+def submit_quiz(request):
+    quiz_id = request.POST.get('quiz_id')
+    quiz = Quiz.objects.get(id=quiz_id)
+    questions = quiz.question_set.all()
 
-        # Get the next question
-        next_question = Question.objects.filter(id__gt=question.id).first()
-        if next_question:
-            return redirect('question_page', question_id=next_question.id)
-        else:
-            return redirect('quiz_result')
-    else:
-        return render(request, 'quiz/question_page.html', {'question': question, 'choices': choices})
+    score = 0
+    total_questions = 0
 
-def quiz_result(request):
-    # Perform any necessary calculations or checks for the final result
-    return render(request, 'quiz/quiz_result.html')
+    for question in questions:
+        choice_ids = request.POST.getlist(f'choice{question.id}')
+        selected_choices = Choice.objects.filter(id__in=choice_ids)
+        correct_choices = question.choice_set.filter(is_correct=True)
+
+        if set(selected_choices) == set(correct_choices):
+            score += 1
+
+        total_questions += 1
+
+    # Pass the score and total questions as context variables
+    return redirect('result_page', score=score, total_questions=total_questions)
+
+def result_page(request, score, total_questions):
+    return render(request, 'quiz/submit_quiz.html', {'score': score, 'total_questions': total_questions})
+
 
 

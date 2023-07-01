@@ -1,0 +1,30 @@
+<!-- quiz_page.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Page</title>
+</head>
+<body>
+    <h1>Quiz</h1>
+    <h2>{{ quiz.title }}</h2>
+
+    <form method="POST" action="{% url 'submit_quiz' %}">
+        {% csrf_token %}
+        <input type="hidden" name="quiz_id" value="{{ quiz.id }}">
+
+        {% for question in questions %}
+            <h3>{{ question.text }}</h3>
+            <ul>
+                {% for choice in question.choice_set.all %}
+                    <li>
+                        <input type="radio" name="choice{{ question.id }}" value="{{ choice.id }}">
+                        {{ choice.text }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+
+        <button type="submit">Submit Quiz</button>
+    </form>
+</body>
+</html>
