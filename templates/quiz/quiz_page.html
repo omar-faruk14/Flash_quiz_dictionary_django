@@ -3,28 +3,56 @@
 <html>
 <head>
     <title>Quiz Page</title>
+    <style>
+        .question {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <h1>Quiz</h1>
     <h2>{{ quiz.title }}</h2>
 
-    <form method="POST" action="{% url 'submit_quiz' %}">
+    <form id="quiz-form" method="POST" action="{% url 'submit_quiz' %}">
         {% csrf_token %}
         <input type="hidden" name="quiz_id" value="{{ quiz.id }}">
 
         {% for question in questions %}
-            <h3>{{ question.text }}</h3>
-            <ul>
-                {% for choice in question.choice_set.all %}
-                    <li>
-                        <input type="radio" name="choice{{ question.id }}" value="{{ choice.id }}">
-                        {{ choice.text }}
-                    </li>
-                {% endfor %}
-            </ul>
+            <div class="question" id="question{{ forloop.counter }}">
+                <h3>{{ question.text }}</h3>
+                <ul>
+                    {% for choice in question.choice_set.all %}
+                        <li>
+                            <input type="radio" name="choice{{ question.id }}" value="{{ choice.id }}">
+                            {{ choice.text }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% if forloop.last %}
+                    <button type="submit">Submit Quiz</button>
+                {% else %}
+                    <button type="button" onclick="nextQuestion()">Next Question</button>
+                {% endif %}
+            </div>
         {% endfor %}
-
-        <button type="submit">Submit Quiz</button>
     </form>
+
+    <script>
+        var currentQuestion = 1;
+        var totalQuestions = {{ questions|length }};
+
+        function nextQuestion() {
+            var currentQuestionDiv = document.getElementById("question" + currentQuestion);
+            currentQuestionDiv.style.display = "none";
+            
+            currentQuestion++;
+            var nextQuestionDiv = document.getElementById("question" + currentQuestion);
+            nextQuestionDiv.style.display = "block";
+        }
+
+        // Show the first question initially
+        var firstQuestionDiv = document.getElementById("question1");
+        firstQuestionDiv.style.display = "block";
+    </script>
 </body>
 </html>
