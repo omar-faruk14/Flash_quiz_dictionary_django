@@ -1,19 +1,20 @@
-<!-- start_quiz.html -->
+<!-- start_quiz.html  -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Start Quiz</title>
+    <title>Subject List</title>
 </head>
 <body>
-    <h1>Available Quizzes</h1>
-    <ul>
-        {% for quiz in quizzes %}
-            <li>
-                <a href="{% url 'quiz_page' quiz.id %}">{{ quiz.title }}</a>
-            </li>
-        {% empty %}
-            <p>No quizzes available.</p>
-        {% endfor %}
-    </ul>
+
+
+<h1>Subject List</h1>
+
+<ul>
+  {% for subject in subjects %}
+    <li><a href="{% url 'quiz_list' subject.id %}">{{ subject.name }}</a></li>
+  {% empty %}
+    <li>No subjects found.</li>
+  {% endfor %}
+</ul>
 </body>
 </html>

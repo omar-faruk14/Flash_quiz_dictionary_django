@@ -1,5 +1,13 @@
 <form method="POST" action="{% url 'quiz' %}">
     {% csrf_token %}
+
+    <label for="subject_name">Subject:</label>
+    <select name="subject_name" id="subject_name">
+        {% for subject in subjects %}
+            <option value="{{ subject.id }}">{{ subject.name }}</option>
+        {% endfor %}
+    </select>
+
     <label for="quiz_title">Quiz Title:</label>
     <input type="text" name="quiz_title" id="quiz_title">
 
@@ -22,3 +30,4 @@
 
     <button type="submit">Submit</button>
 </form>
+
